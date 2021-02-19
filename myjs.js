@@ -7,20 +7,21 @@ const result_div = document.querySelector(".result >p");
 const rock_div = document.getElementById("rock");
 const paper_div = document.getElementById("paper");
 const scissors_div = document.getElementById("scissors");
+const comp_rock = document.getElementById("c-rock");
+const comp_paper = document.getElementById("c-paper");
+const comp_scissors = document.getElementById("c-scissors");
+const comp_choices = document.getElementsByClassName("c-choice");
 
 
-function getComputerChoice(){
-    const choices = ["r", "p", "s"]
-    const randomInt = Math.floor(Math.random()*3);
-    return choices[randomInt];
-}
 
 function win(user,computer){
     userScore++;
     userScore_span.innerHTML=userScore;
-
-    result_div.innerHTML=`${letterToWord(user)} beats ${letterToWord(computer)}. You win!`;
-    
+    user = letterToWord(user);
+    computer = letterToWord(computer);
+    result_div.innerHTML=`${user} beats ${computer}. You win!`;
+    document.getElementById(user).classList.add('green-glow');
+    setTimeout(()=>document.getElementById(user).classList.remove("green-glow"),500);
 
 }
 
@@ -30,7 +31,7 @@ function defeat(user,computer){
     user = letterToWord(user);
     computer = letterToWord(computer);
     result_div.innerHTML=`${user} loses to ${computer}. You lose :(`;
-    document.getElementById(user).classList.add('green-glow');
+
 
 }
 
@@ -41,15 +42,42 @@ function tie(user,computer){
 }
 
 function letterToWord(letter){
-  if(letter==="r") return "Rock";
-  if(letter==="s") return "Scissors";
-  return "Paper";
+  if(letter==="r") return "rock";
+  if(letter==="s") return "scissors";
+  return "paper";
 }
 
+function getComputerChoice(){
+    const choices = ["r", "p", "s"]
+    const randomInt = Math.floor(Math.random()*3);
+    return choices[randomInt];
+}
 
+function compStyle(choice){
+  let x;
+  if(choice==="r"){
+    x = comp_rock.classList.add("comp-selection");
+  } else if (choice==="s"){
+    x =comp_scissors.classList.add("comp-selection");
+  }else{
+    x = comp_paper.classList.add("comp-selection");
+  }
+  return x;
+}
+
+function removeCompStyle(){
+  for(let i=0; i<comp_choices.length; i++){
+    comp_choices[i].classList.remove("comp-selection");
+  }
+}
 
 function game(userChoice){
+    removeCompStyle();
+
     const computerChoice = getComputerChoice();
+
+    let x = compStyle(computerChoice);
+
     switch(userChoice + computerChoice){
       case "rs":
       case "pr":
@@ -71,6 +99,7 @@ function game(userChoice){
 
 
 function main(){
+
   rock_div.addEventListener('click',function(){
     game("r");
   })
